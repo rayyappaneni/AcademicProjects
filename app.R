@@ -262,12 +262,7 @@ uiOutput("page")
 
 
 top_dir <- here()
-print(top_dir)
-
 sqlitePath <- paste0(top_dir,'/',"labdata.db")
-print(sqlitePath)
-
-
 
 #Defining the feilds from new user registration
 
@@ -923,12 +918,15 @@ server <- function(input, output, session) {
  
   
   ############### Logo on home page #####################
-  
-  output$logo <- renderImage({
+   
+   top_dir <- here()
+   filename <- paste0(top_dir,'/',"MaryvilleLogo.png")
+   output$logo <- renderImage({
     
     
-    filename <- normalizePath(file.path('C:/Users/genre/OneDrive/Desktop/MS_DataSceince/R',
-                                        paste('MaryvilleLogo', '.png', sep='')))
+##filename <- normalizePath(file.path('C:/Users/genre/OneDrive/Desktop/MS_DataSceince/R',
+                                        #paste('MaryvilleLogo', '.png', sep='')))
+    
     
     # Return a list containing the filename
     list(src = filename)
