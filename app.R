@@ -18,9 +18,10 @@ library(rmarkdown)
 library(rJava)
 library(gridExtra)
 library(rsconnect)
+library(here)
 
-(WD <- getwd())
-if (!is.null(WD)) setwd(WD)
+#(WD <- getwd())
+#if (!is.null(WD)) setwd(WD)
 
 ###Logged = FALSE
 
@@ -257,7 +258,14 @@ uiOutput("page")
  
 
 
-sqlitePath <- "C:/Users/genre/OneDrive/Desktop/MS_DataSceince/R/labdata.db"
+##### sqlitePath <- "C:/Users/genre/OneDrive/Desktop/MS_DataSceince/R/labdata.db"
+
+
+top_dir <- here()
+print(top_dir)
+
+sqlitePath <- paste0(top_dir,'/',"labdata.db")
+print(sqlitePath)
 
 
 
@@ -740,7 +748,7 @@ server <- function(input, output, session) {
    
    ############   DashBoard ##############################
    
-   dbDisconnect(db)
+   #dbDisconnect(db)
    db <- dbConnect(SQLite(), sqlitePath)
    
    testresultstabel <- tbl(db, "TestResults")
