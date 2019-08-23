@@ -20,12 +20,8 @@ library(gridExtra)
 library(rsconnect)
 library(here)
 
-#(WD <- getwd())
-#if (!is.null(WD)) setwd(WD)
+Logged = FALSE
 
-###Logged = FALSE
-
-####  ui2 <- function(){tagList(tabPanel("Login"))}
 
 ui <- fluidPage(theme = shinytheme("simplex"),
         navbarPage(id = "mainpage1",
@@ -47,9 +43,9 @@ ui <- fluidPage(theme = shinytheme("simplex"),
                                         br(),
                                         
                                  imageOutput("logo", width = 100, height = 200), br(),br(),br(),
-                                  strong("Welcome to your Lab Data, this website is developed using R Shiny to manage customer Lab Data.
-                                                Customers can log in and order their test. Analysts can update results, view reports, download 
-                                               reports")
+                                  strong("Welcome to your Lab Data, this website is developed using R Shiny to manage customer's Lab Data.
+                                                Customers can create their own user account, log in and order their tests and logout. Analysts can create new users, update test results, view reports and download 
+                                               reports. Depending on the user login and role relavent tabs will be displayed")
                                 
                                 ,br(), br(),br(), br(), br(),br()
                                 ,br(), br(),br(), br(), br(),br()
@@ -276,6 +272,10 @@ NewTestOrder <- c("CustId","gender", "RequestDate","TestName1","LabLocation1", "
 ################################################################
 
 server <- function(input, output, session) {
+  
+  hideTab(inputId = "Navp", target = "Dash board")
+  hideTab(inputId = "Navp", target = "Analyst")
+  hideTab(inputId = "Navp", target = "Customer")
 
     Logged = FALSE
  
@@ -566,6 +566,10 @@ server <- function(input, output, session) {
      
     if ( userrec$Role == "analyst" ) { 
       
+      showTab(inputId = "Navp", target = "Dash board")
+      showTab(inputId = "Navp", target = "Analyst")
+      showTab(inputId = "Navp", target = "New User")
+      
        hideTab(inputId = "Navp", target = "Login")
    #   hideTab(inputId = "Navp", target = "NewUser")
        hideTab(inputId = "Navp", target = "Customer")
@@ -575,6 +579,8 @@ server <- function(input, output, session) {
       
       }
     if ( userrec$Role == "customer" ) {
+      
+      showTab(inputId = "Navp", target = "Customer")
       
       hideTab(inputId = "Navp", target = "Dash board")
       hideTab(inputId = "Navp", target = "Analyst")
@@ -593,10 +599,10 @@ server <- function(input, output, session) {
   
   USER$Logged <- FALSE 
   
-  showTab(inputId = "Navp", target = "Customer")
-  showTab(inputId = "Navp", target = "Analyst")
+  hideTab(inputId = "Navp", target = "Customer")
+  hideTab(inputId = "Navp", target = "Analyst")
   showTab(inputId = "Navp", target = "Login")
-  showTab(inputId = "Navp", target = "Dash board")
+  hideTab(inputId = "Navp", target = "Dash board")
   showTab(inputId = "Navp", target = "New User")
   
   updateTextInput(session, "userName", value = '')
@@ -681,9 +687,6 @@ server <- function(input, output, session) {
  #TestResults <- filter(datatb,  (is.na(Test1Results) | Test1Results == 0))
  
  TestResults <- datatb
- 
- 
- 
  output$Results <- renderDT(TestResults, options = 
                               list(scrollX = TRUE), editable = TRUE)
  
